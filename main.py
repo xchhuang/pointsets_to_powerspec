@@ -11,6 +11,7 @@ import os
 import sys
 import logging
 import argparse
+os.environ["OPENCV_IO_ENABLE_OPENEXR"]="1"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -69,20 +70,22 @@ def visualize_pointset():
     else:
         raise ValueError('pointset_name not found')
     
-    plot_point_np(samples, 'black', dot_size, f"results/{pointset_name}")
+    plot_point_np(samples, 'black', dot_size, f"{output_folder}/{pointset_name}")
 
     res = 256
     N = samples.shape[0]
     tar_spectrum_2d = continuous_fourier_2d_torch(device, torch.from_numpy(samples).float().to(device), res, freqStep=1)
     
-    if True:
-        plt.figure(1)
-        plt.imshow(tar_spectrum_2d.detach().cpu().numpy(), cmap='gray')
-        plt.axis('off')
-        # plt.show()
-        plt.savefig('results/tar_spectrum_2d', bbox_inches='tight', pad_inches=0, dpi=200)
-        plt.close('all')
+    cv2.imwrite(f'{output_folder}/ps_{pointset_name}.exr', tar_spectrum_2d.detach().cpu().numpy().astype(np.float32))
 
+    # if True:    # not working
+    #     plt.figure(1)
+    #     plt.imshow(tar_spectrum_2d.detach().cpu().numpy(), cmap='gray')
+    #     plt.axis('off')
+    #     # plt.show()
+    #     plt.savefig(f'{output_folder}/tar_spectrum_2d', bbox_inches='tight', pad_inches=0, dpi=200)
+    #     plt.close('all')
+    
     print('Done.')
 
 
