@@ -61,12 +61,14 @@ def visualize_pointset():
         samples = np.random.rand(num_points, 2).astype(np.float32)
     else:
         samples = np.loadtxt(pointset_path).astype(np.float32)
-
     
+    # hard-coded
     if num_points == 1024:
         dot_size = 10
     elif num_points == 2048:
-        dot_size = 7    # hard-coded
+        dot_size = 7    
+    elif num_points == 16:
+        dot_size = 20
     else:
         raise ValueError('pointset_name not found')
     
